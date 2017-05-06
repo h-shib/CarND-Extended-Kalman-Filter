@@ -24,16 +24,20 @@ FusionEKF::FusionEKF() {
 
   //measurement covariance matrix - laser
   R_laser_ << 0.0225, 0,
-        0, 0.0225;
+              0, 0.0225;
 
   //measurement covariance matrix - radar
   R_radar_ << 0.09, 0, 0,
-        0, 0.0009, 0,
-        0, 0, 0.09;
+              0, 0.0009, 0,
+              0, 0, 0.09;
 
   // measurement matrix - laser
   H_laser_ << 1, 0, 0, 0,
               0, 1, 0, 0;
+
+  Hj_ << 1, 1, 0, 0,
+         1, 1, 0, 0,
+         1, 1, 1, 1;
 
   noise_ax_ = 9;
   noise_ay_ = 9;
@@ -101,6 +105,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
+    previous_timestamp_ = measurement_pack.timestamp_;
     return;
   }
 
