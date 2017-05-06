@@ -4,6 +4,8 @@
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
+#define PI 3.1415926535897
+
 KalmanFilter::KalmanFilter() {}
 
 KalmanFilter::~KalmanFilter() {}
@@ -52,6 +54,17 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd y = z - tools.CartesianToPolar(x_);
   MatrixXd S = H_ * P_ * H_.transpose() + R_;
   MatrixXd K = P_ * H_.transpose() * S.inverse();
+
+  // normalize error
+  while(y[1]> PI || y[1] < -PI)
+  {
+    if (y[1] > PI) {
+      y[1]-= PI;
+    }
+    else {
+      y[1]+= PI;
+    }
+  }
 
   //new estimate
   x_ = x_ + (K * y);
