@@ -59,8 +59,8 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	return Hj;
 }
 
-MatrixXd Tools::CartesianToPolar(const VectorXd& x_state) {
-	MatrixXd h(3, 1);
+VectorXd Tools::CartesianToPolar(const VectorXd& x_state) {
+	VectorXd h(3);
 	float px = x_state(0);
   float py = x_state(1);
   float vx = x_state(2);
@@ -68,7 +68,12 @@ MatrixXd Tools::CartesianToPolar(const VectorXd& x_state) {
 
   float rho = sqrt(px*px + py*py);
   float phi = atan2(py, px);
-  float rho_dot = (px*vx + py*vy) / rho;
+  float rho_dot;
+  if (fabs(rho) < 0.0001) {
+		rho_dot = 0;
+	} else {
+		rho_dot = (px*vx + py*vy) / rho;
+  }
 
   h << rho, phi, rho_dot;
   return h;

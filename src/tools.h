@@ -28,7 +28,7 @@ public:
   /**
   * A helper method to convert from cartesian coordinates to polar coordinates.
   */
-  Eigen:: MatrixXd CartesianToPolar(const Eigen::VectorXd& x_state);
+  Eigen:: VectorXd CartesianToPolar(const Eigen::VectorXd& x_state);
 
 };
 
