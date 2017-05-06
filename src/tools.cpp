@@ -1,6 +1,5 @@
 #include <iostream>
 #include "tools.h"
-#include <math.h>
 
 using namespace std;
 using Eigen::VectorXd;
