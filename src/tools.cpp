@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tools.h"
+#include <math.h>
 
 using namespace std;
 using Eigen::VectorXd;
@@ -26,7 +27,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   for (unsigned int i=0; i<estimations.size(); ++i) {
   	VectorXd residual = estimations[i] - ground_truth[i];
   	residual = residual.array()*residual.array();
-  	residual += residual;
+  	rmse += residual;
   }
   rmse = rmse / estimations.size();
   rmse = rmse.array().sqrt();
@@ -57,4 +58,19 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 		  py*(vx*py - vy*px)/c3, px*(px*vy - py*vx)/c3, px/c2, py/c2;
 
 	return Hj;
+}
+
+MatrixXd Tools::CartesianToPolar(const VectorXd& x_state) {
+	MatrixXd h(3, 1);
+	float px = x_state(0);
+  float py = x_state(1);
+  float vx = x_state(2);
+  float vy = x_state(3);
+
+  float rho = sqrt(px*px + py*py);
+  float phi = atan(py/px);
+  float rho_dot = (px*vx + py*vy) / rho;
+
+  h << rho, phi, rho_dot;
+  return h;
 }
